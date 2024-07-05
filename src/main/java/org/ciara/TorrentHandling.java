@@ -60,7 +60,7 @@ public class TorrentHandling {
 
         s.start();
         TorrentInfo ti = new TorrentInfo(torrentFile);
-        s.download(ti, torrentFile.getParentFile());
+        s.download(ti, new File( new FileHandling().FolderCreate("CiaraBot")));
         try{
             signal.await();
         }catch ( Exception e ){

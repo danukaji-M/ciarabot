@@ -12,6 +12,7 @@ public class Main {
 
     public static void main(String[] args) {
         TorrentHandling torrentHandling = new TorrentHandling();
+        torrentHandling.TorrentDownload("src/main/resources/Honey_Larochelle_Hijack_FrostClick_FrostWire_MP3_May_06_2016.torrent");
         coreBotThread coreBotThread = new coreBotThread();
         coreBotThread.start();
     }
