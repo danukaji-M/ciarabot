@@ -11,8 +11,8 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 public class Main {
 
     public static void main(String[] args) {
-        TorrentHandling torrentHandling = new TorrentHandling();
-        torrentHandling.TorrentDownload("src/main/resources/Honey_Larochelle_Hijack_FrostClick_FrostWire_MP3_May_06_2016.torrent");
+        TorrentHandling trh = new TorrentHandling();
+        //trh.TorrentDownload("src/main/resources/AJC_and_The_Envelope_Pushers_Fallen_Star_FrostClick_FrostWire_MP3_January_16_2017 (2).torrent");
         coreBotThread coreBotThread = new coreBotThread();
         coreBotThread.start();
     }

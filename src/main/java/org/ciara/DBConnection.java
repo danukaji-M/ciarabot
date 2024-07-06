@@ -3,12 +3,22 @@ package org.ciara;
 import java.sql.*;
 
 public class DBConnection {
-    public static Connection setConnection(){
+    
+    private static final String URL = "jdbc:mysql://localhost:3306/ciara";
+    private static final String USER = "danu";
+    private static final String PASSWORD = "Danu2003@";
+
+    public static Connection setConnection() {
         Connection connection = null;
-        try{
+        try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://localhost.3306/ciaraDb","danu","Danu2003@");
-        }catch (SQLException | ClassNotFoundException e){
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            System.out.println("Connection successful!");
+        } catch (ClassNotFoundException e) {
+            System.err.println("MySQL JDBC Driver not found!");
+            e.printStackTrace();
+        } catch (SQLException e) {
+            System.err.println("Connection failed!");
             e.printStackTrace();
         }
         return connection;

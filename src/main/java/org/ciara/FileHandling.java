@@ -37,5 +37,21 @@ public class FileHandling {
         }
 
     }
+    public String FolderHandling(String folderName) {
+        String downloadPath = System.getProperty("user.home") + "/Downloads/CiaraBot/" + folderName;
+        Path path = Paths.get(downloadPath);
+        if(Files.exists(path)){
+            return downloadPath;
+        }else{
+            System.out.println("Folder does not exist: " + path);
+            try{
+                Files.createDirectories(path);
+                System.out.println("Folder created: " + path);
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        return downloadPath;
+    }
 
 }

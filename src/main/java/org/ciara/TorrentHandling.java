@@ -64,7 +64,7 @@ public class TorrentHandling {
         try{
             signal.await();
         }catch ( Exception e ){
-        e.printStackTrace();
+            throw new RuntimeException(e);
         }
         s.stop();
     }
