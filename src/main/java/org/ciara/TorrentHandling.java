@@ -10,10 +10,7 @@ import com.frostwire.jlibtorrent.alerts.AlertType;
 import com.frostwire.jlibtorrent.alerts.BlockFinishedAlert;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+
 import java.util.concurrent.CountDownLatch;
 
 
@@ -60,7 +57,7 @@ public class TorrentHandling {
 
         s.start();
         TorrentInfo ti = new TorrentInfo(torrentFile);
-        s.download(ti, new File( new FileHandling().FolderCreate("CiaraBot")));
+        s.download(ti, new File( new FileHandling().FolderHandling("Films")));
         try{
             signal.await();
         }catch ( Exception e ){

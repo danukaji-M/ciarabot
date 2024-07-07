@@ -3,20 +3,25 @@ package org.ciara;
 import org.jetbrains.annotations.NotNull;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.*;
+import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CoreBot extends TelegramLongPollingBot {
 
@@ -28,7 +33,7 @@ public class CoreBot extends TelegramLongPollingBot {
     DBConnection connection = new DBConnection();
     static int catId;
     static boolean category = false;
-
+    TorrentHandling torHandle = new TorrentHandling();
 
     public CoreBot(DefaultBotOptions options){
         super(options);
@@ -42,7 +47,7 @@ public class CoreBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "7378808698:AAHltdFa3AAq1bNhkeup1XCn-BtotcXeqVs";
+        return "7292739088:AAH8UDqA0jESTb_mh0OsuBE0wmHJU_DZow8";
     }
 
     @Override
@@ -54,34 +59,32 @@ public class CoreBot extends TelegramLongPollingBot {
 
         Message msg = update.getMessage();
         if(msg.hasText()) {
-            if(msg.getText().equals("/start")){
+            if (msg.getText().equals("/start")) {
                 hasMsg = true;
                 hasDoc = false;
                 hasKeyBoard = false;
                 //Insert Msg Handling Part
                 SendKeyBoard(msg);
             }
-        }else if(msg.hasDocument()){
-            hasMsg = false;
-            hasDoc = true;
-            hasKeyBoard = false;
-            System.out.println("has Doc.");
-            //insert Document Handling Part
-            String docId = msg.getDocument().getFileId();
-            System.out.println(docId);
-            if(category){
-                docHandler(docId);
-            }
 
+        }else if (update.hasMessage() && update.getMessage().hasDocument() && category){
+            Document doc = update.getMessage().getDocument();
+            GetFile getfile = new GetFile();
+            getfile.setFileId(doc.getFileId());
+            try {
+                File file = execute(getfile);
+                String filePath = file.getFilePath();
+                System.out.println(filePath);
+                torHandle.TorrentDownload(filePath);
+            } catch (TelegramApiException e) {
+                throw new RuntimeException(e);
+            }
+        }else {
+            SendTextMessage("Select Your Film Category To type /start", update.getMessage().getChatId().toString());
         }
     }
 
-    private void docHandler(String docId){
-        FileHandling fileHandling = new FileHandling();
-        String FoldPath = fileHandling.FolderHandling("Torrent");
-    }
-
-    private InlineKeyboardMarkup createInlineKeyboardMarkup(int page) {
+    private @NotNull InlineKeyboardMarkup createInlineKeyboardMarkup(int page) {
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         int limit = 5;
